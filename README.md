@@ -94,4 +94,4 @@ The configuration parameters for the json file are:
 }
 ```
 
-When using the API, any of these parameters can be overridden at runtime.
+When using the API, any of these parameters can be overridden at runtime using the setSetting(key,value) method.
