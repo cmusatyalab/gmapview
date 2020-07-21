@@ -1,6 +1,6 @@
 # GMapView
 
-GMapView is a simple tool to allow downloading and viewing images from Google StreetView using different ways of expressing locations. It is implemented as a class for use in other modules and has a command line interface for direct access.
+GMapView is a simple tool to allow downloading and viewing images from Google StreetView using different ways of expressing locations. It is implemented as a class for use in other modules and has a command line interface for direct access. This version has been tested with python3 on Ubuntu 18.04 and Windows 10.
 
 ## Prerequisites and Setup
 
