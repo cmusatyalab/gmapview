@@ -1,0 +1,16 @@
+{
+    "addresses": {
+        "5000 Forbes Ave, Pittsburgh, PA 15213": {
+            "lat": 40.44416469999999,
+            "lng": -79.9433725
+        },
+        "4125 Schenley Dr., Pittsburgh, PA 15213": {
+            "lat": 40.4423865,
+            "lng": -79.9518064
+        },
+        "417 S Craig St, Pittsburgh, PA 15213": {
+            "lat": 40.44467090000001,
+            "lng": -79.9485178
+        }
+    }
+}

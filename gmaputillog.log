@@ -1,0 +1,66 @@
+2020-07-21 09:08:29,057 [INFO] PLOTON is False; CLEAN is False
+2020-07-21 09:08:29,057 [ERROR] No tests specified; Exiting
+2020-07-21 09:10:14,606 [INFO] PLOTON is False; CLEAN is False
+2020-07-21 09:10:14,607 [INFO] Running tests: ['point']
+2020-07-21 09:10:14,607 [INFO] Running test: point
+2020-07-21 09:10:16,937 [INFO] Finished Tests
+2020-07-21 09:10:50,221 [INFO] PLOTON is True; CLEAN is False
+2020-07-21 09:10:50,221 [INFO] Running tests: ['point']
+2020-07-21 09:10:50,221 [INFO] Running test: point
+2020-07-21 09:10:56,351 [INFO] Finished Tests
+2020-07-21 09:16:38,838 [INFO] PLOTON is True; CLEAN is False
+2020-07-21 09:16:38,839 [INFO] Running tests: ['point']
+2020-07-21 09:16:38,839 [INFO] Running test: point
+2020-07-21 09:16:40,255 [ERROR] Could not get window position; known issue on Windows 10
+2020-07-21 09:16:45,273 [INFO] Finished Tests
+2020-07-21 09:16:56,566 [INFO] PLOTON is True; CLEAN is False
+2020-07-21 09:16:56,567 [INFO] Running tests: ['point']
+2020-07-21 09:16:56,567 [INFO] Running test: point
+2020-07-21 09:19:15,073 [INFO] PLOTON is True; CLEAN is False
+2020-07-21 09:19:15,074 [INFO] Running tests: ['point']
+2020-07-21 09:19:15,074 [INFO] Running test: point
+2020-07-21 09:19:18,205 [ERROR] Could not get window position; known issue on Windows 10
+2020-07-21 09:19:23,258 [INFO] Finished Tests
+2020-07-21 09:19:48,596 [INFO] PLOTON is True; CLEAN is True
+2020-07-21 09:19:48,596 [INFO] Running tests: ['address', 'p2p', 'kml', 'directions', 'list', 'point']
+2020-07-21 09:19:48,597 [INFO] Valid Tests are: ['address', 'p2p', 'kml', 'directions', 'list', 'point']
+2020-07-21 09:19:48,597 [INFO] Running test: p2p
+2020-07-21 09:19:51,310 [ERROR] Could not get window position; known issue on Windows 10
+2020-07-21 09:19:59,197 [ERROR] Could not get window position; known issue on Windows 10
+2020-07-21 09:20:06,837 [ERROR] Could not get window position; known issue on Windows 10
+2020-07-21 09:20:14,483 [ERROR] Could not get window position; known issue on Windows 10
+2020-07-21 09:20:22,074 [ERROR] Could not get window position; known issue on Windows 10
+2020-07-21 09:20:29,275 [ERROR] Could not get window position; known issue on Windows 10
+2020-07-21 09:20:34,349 [INFO] Running test: address
+2020-07-21 09:20:36,423 [ERROR] Could not get window position; known issue on Windows 10
+2020-07-21 09:20:41,590 [INFO] Running test: kml
+2020-07-21 09:20:44,045 [ERROR] Could not get window position; known issue on Windows 10
+2020-07-21 09:20:51,435 [ERROR] Could not get window position; known issue on Windows 10
+2020-07-21 09:20:59,020 [ERROR] Could not get window position; known issue on Windows 10
+2020-07-21 09:21:06,730 [ERROR] Could not get window position; known issue on Windows 10
+2020-07-21 09:21:14,259 [ERROR] Could not get window position; known issue on Windows 10
+2020-07-21 09:21:22,043 [ERROR] Could not get window position; known issue on Windows 10
+2020-07-21 09:21:29,405 [ERROR] Could not get window position; known issue on Windows 10
+2020-07-21 09:21:37,185 [ERROR] Could not get window position; known issue on Windows 10
+2020-07-21 09:21:44,710 [ERROR] Could not get window position; known issue on Windows 10
+2020-07-21 09:21:52,195 [ERROR] Could not get window position; known issue on Windows 10
+2020-07-21 09:22:00,263 [ERROR] Could not get window position; known issue on Windows 10
+2020-07-21 09:22:07,524 [ERROR] Could not get window position; known issue on Windows 10
+2020-07-21 09:22:14,876 [ERROR] Could not get window position; known issue on Windows 10
+2020-07-21 09:22:22,293 [ERROR] Could not get window position; known issue on Windows 10
+2020-07-21 09:22:29,862 [ERROR] Could not get window position; known issue on Windows 10
+2020-07-21 09:22:37,209 [ERROR] Could not get window position; known issue on Windows 10
+2020-07-21 09:22:44,856 [ERROR] Could not get window position; known issue on Windows 10
+2020-07-21 09:22:52,088 [ERROR] Could not get window position; known issue on Windows 10
+2020-07-21 09:22:59,531 [ERROR] Could not get window position; known issue on Windows 10
+2020-07-21 09:23:07,089 [ERROR] Could not get window position; known issue on Windows 10
+2020-07-21 09:23:14,402 [ERROR] Could not get window position; known issue on Windows 10
+2020-07-21 09:23:20,886 [ERROR] Could not get window position; known issue on Windows 10
+2020-07-21 09:23:26,647 [INFO] Running test: point
+2020-07-21 09:23:27,817 [ERROR] Could not get window position; known issue on Windows 10
+2020-07-21 09:23:32,972 [INFO] Running test: directions
+2020-07-21 09:23:35,408 [ERROR] Could not get window position; known issue on Windows 10
+2020-07-21 09:23:42,998 [ERROR] Could not get window position; known issue on Windows 10
+2020-07-21 09:23:50,446 [ERROR] Could not get window position; known issue on Windows 10
+2020-07-21 09:23:57,735 [ERROR] Could not get window position; known issue on Windows 10
+2020-07-21 09:24:05,034 [ERROR] Could not get window position; known issue on Windows 10

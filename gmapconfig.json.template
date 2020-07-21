@@ -1,0 +1,17 @@
+{
+	"GAPIKEY":"<insert key>",
+	"IMGDIR":"/tmp/images",
+	"IMGSIZE":"600x300",
+	"PLOTON":true,
+	"SHOWTIME":4,
+	"MAPON":true,
+	"CLEAN":false,	
+	"HEADINGS":"0,90,180,270",
+	"PITCH":-0.76,
+	"LINEPTS":3,
+	"XPOS":100,	
+	"YPOS":100,
+	"FIGWIDTH":10,
+	"FIGHEIGHT":10,	
+	"ADDRESSFILE":"./gmapaddresses.json"
+}
