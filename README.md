@@ -30,7 +30,7 @@ This should print a list of the accepted "tests" that GMapView understands. It w
 If successful, you should see four new images in your IMGDIR. If you'd like to have these images displayed, try:
 
 ```
-> GMapView.py -t point --plot
+> python GMapView.py -t point --plot
 ```
 
 Each test has a default location and most can be overridden with a custom location. The current list of valid tests is * 'address', 'p2p', 'kml', 'directions', 'point', 'all'*.
