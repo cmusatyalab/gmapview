@@ -18,13 +18,13 @@ Edit **gmapconfig.json** to add your API key and change any other parameters. Th
 Now test your installation with:
 
 ```
-> GMapView.py -t list
+> python GMapView.py -t list
 ```
 
 This should print a list of the accepted "tests" that GMapView understands. It will also validate that all of the prerequisites are installed. To actually run the API, try:
 
 ```
-> GMapView.py -t point
+> python GMapView.py -t point
 ```
 
 If successful, you should see four new images in your IMGDIR. If you'd like to have these images displayed, try:
@@ -37,15 +37,15 @@ Each test has a default location and most can be overridden with a custom locati
  A few more command line examples:
 
 ```
-> GMapView.py -t address -A '4125 Schenley Dr., Pittsburgh, PA 15213' -P
-> GMapView.py -t point -L 40.45213252042862,-79.93091008312071 -P
-> GMapView.py -t directions -R start='417 S Craig St, Pittsburgh, PA 15213',end='4125 Schenley Dr., Pittsburgh, PA 15213' -P
+> python GMapView.py -t address -A '4125 Schenley Dr., Pittsburgh, PA 15213' -P
+> python GMapView.py -t point -L 40.45213252042862,-79.93091008312071 -P
+> python GMapView.py -t directions -R start='417 S Craig St, Pittsburgh, PA 15213',end='4125 Schenley Dr., Pittsburgh, PA 15213' -P
 ```
 
 The full set of commmand line options are:
 
 ```
-Usage: GMapView.py [options]
+Usage: python GMapView.py [options]
 
 Options:
   -h, --help            show this help message and exit
