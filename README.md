@@ -75,7 +75,8 @@ The API further allows flexibility in specifying point to point routes and KML f
 The configuration parameters for the json file are:
 
 ```
-	"GAPIKEY":"<YourAPIKey",
+{
+	"GAPIKEY":"<YourAPIKey>",
 	"IMGDIR":"YourImageDirectory",
 	"IMGSIZE":"600x300", 		# Max size is 640x640
 	"CLEAN":false,			# Delete the downloaded files before exiting
@@ -90,6 +91,7 @@ The configuration parameters for the json file are:
 	"FIGWIDTH":15,			# Width of the plot
 	"FIGHEIGHT":15,			# Height of the plot
 	"ADDRESSFILE":"./gmapaddresses.json"	# The file to use as a cache for searched addresses.
+}
 ```
 
 When using the API, any of these parameters can be overridden at runtime.
