@@ -18,18 +18,11 @@ from PIL import Image
 from math import ceil
 import matplotlib.pyplot as plt
 from mpl_toolkits.axes_grid1 import ImageGrid
-
-logging.basicConfig(
-    level=logging.INFO,
-    format="%(asctime)s [%(levelname)s] %(message)s",
-    handlers=[
-        logging.FileHandler("gmaputillog.log"),
-        logging.StreamHandler(sys.stdout)
-    ]
-) 
+LOGNAME="gmaputillog"
 
 def main():
-    
+    global logger
+    logger = configureLogging()
     ''' Main consists of two parts: the command line interface to the API 
         and a series of tests of the API. The command line options are:
         Usage: GMapView.py [options]
@@ -395,7 +388,8 @@ class GMapView(object):
                 mapim = self.getMap(cntr)
                 nfnlst.append('{}/tmpmap.png'.format(self.settings['IMGDIR']))
                 imlst.append(mapim)
-            title = "{} at {}".format(loc['rtname'],loc['locstr'])
+            title = "{} at {}".format(loc['rtname'],loc['locstr']) \
+                    if 'TITLE' not in self.settings else self.settings['TITLE']
             self.plotImages(imlst,xpos=self.settings['XPOS'],ypos=self.settings['YPOS'],title=title)
             
         if self.settings['CLEAN']:
@@ -520,5 +514,21 @@ craigptlst = [[-79.94871048275425,40.44449150262002,274.0581036970866],
 
 pt1 = {'lat': 40.45066718053887, 'lng': -79.93559640239131}
 pt2 = {'lat': 40.45213252042862, 'lng': -79.93091008312071}
+
+def configureLogging():
+#     logging.basicConfig(format="%(asctime)s [%(levelname)s] %(message)s")
+    logger = logging.getLogger(LOGNAME)
+    logger.propagate = False
+    fh = logging.FileHandler(LOGNAME+'.log')
+    fh.setLevel(logging.INFO)
+    ch = logging.StreamHandler(sys.stdout)
+    ch.setLevel(logging.INFO)
+    formatter = logging.Formatter("%(asctime)s [%(levelname)s] %(message)s")
+    fh.setFormatter(formatter)
+    ch.setFormatter(formatter)
+    logger.addHandler(fh)
+    logger.addHandler(ch)
+    logger.setLevel(logging.INFO)    
+    return logger
 
 if __name__ == '__main__': main()
