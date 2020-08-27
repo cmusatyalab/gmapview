@@ -84,7 +84,7 @@ def main():
         gmsv = GMapView(configfile = options.jsonconfig)
     else:
         gmsv = GMapView()
-    
+
     ''' Override options from command line '''
     if options.plot is not None:
         gmsv.setSetting("PLOTON", options.plot)
@@ -93,7 +93,7 @@ def main():
     logging.info("PLOTON is {}; CLEAN is {}".format(gmsv.getSetting("PLOTON"),gmsv.getSetting("CLEAN")))
     if options.headinglist is not None:
         gmsv.setSetting("HEADINGS",options.headinglist.replace(",",";"))
-
+        
     if options.linepts is not None:
         try:
             gmsv.setSetting("LINEPTS",int(options.linepts))
@@ -207,6 +207,8 @@ class GMapView(object):
     
     def setSetting(self,key,value,**kwargs):
         self.settings[key] = value
+        if key == "LOGLEVEL":
+            self.setLogLevel(value)
 
     def getSetting(self,key):
         retval = self.settings[key] if key in self.settings else None
