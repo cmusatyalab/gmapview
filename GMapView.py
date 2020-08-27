@@ -55,6 +55,8 @@ def main():
     
     parser = OptionParser()
     ''' Set API Parameters '''
+    parser.add_option("-G", "--gapikey", dest="gapikey", default=None, 
+        help="Google Maps API Key", metavar="STRING")       
     parser.add_option("-d", "--headings", dest="headinglist", # d for 'direction'
         help="use STRING as headings  (comma separated list)", metavar="STRING")
     parser.add_option("-j", "--jsonconfig", dest="jsonconfig",
@@ -67,6 +69,7 @@ def main():
         help="Plot the downloaded images")
     parser.add_option("-C", "--clean", action="store_true", dest="clean", default=None, 
         help="Delete downloaded images before exit")
+ 
         
     ''' Set Testing Variables '''
     parser.add_option("-t", "--test", dest="testlist",
@@ -81,9 +84,9 @@ def main():
 
     ''' Instantiate the API '''
     if options.jsonconfig is not None:
-        gmsv = GMapView(configfile = options.jsonconfig)
+        gmsv = GMapView(configfile = options.jsonconfig,GAPIKEY=options.gapikey)
     else:
-        gmsv = GMapView()
+        gmsv = GMapView(GAPIKEY=options.gapikey)
 
     ''' Override options from command line '''
     if options.plot is not None:
@@ -199,8 +202,9 @@ class GMapView(object):
             return False
         else:
             self.settings = defaultsettings
-            self.settings['GAPIKEY'] = GAPIKEY
         self.settings['HEADINGS'] = self.settings['HEADINGS'].replace(",",";")  # Hack to allow csv for headings
+        if GAPIKEY is not None:
+            self.settings['GAPIKEY'] = GAPIKEY        
         if 'LOGLEVEL' in self.settings:
             self.setLogLevel(self.settings['LOGLEVEL'])
         return True
