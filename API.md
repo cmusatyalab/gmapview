@@ -71,5 +71,16 @@ start='417 S Craig St, Pittsburgh, PA 15213',end='4125 Schenley Dr., Pittsburgh,
 Start the pipeline with a kml file -- this is very limited now TODO make more general
 It only works with kml files with a LinesString feature with name rtname
 
+### Constructor Options
+To specify a different configuation file:
 
+```
+> gmsv = GMapView(configfile=<path to configfile>)
+```
+
+To specify your Google Maps API Key:
+
+```
+> gmsv = GMapView(GAPIKEY=<your API Key>)
+```
 
