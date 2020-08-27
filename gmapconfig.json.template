@@ -12,6 +12,7 @@
 	"XPOS":100,	
 	"YPOS":100,
 	"FIGWIDTH":10,
-	"FIGHEIGHT":10,	
+	"FIGHEIGHT":10,
+	"LOGLEVEL":"INFO",
 	"ADDRESSFILE":"./gmapaddresses.json"
 }

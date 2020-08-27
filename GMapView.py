@@ -21,8 +21,6 @@ from mpl_toolkits.axes_grid1 import ImageGrid
 LOGNAME="gmaputillog"
 
 def main():
-    global logger
-    logger = configureLogging()
     ''' Main consists of two parts: the command line interface to the API 
         and a series of tests of the API. The command line options are:
         Usage: GMapView.py [options]
@@ -105,7 +103,7 @@ def main():
         try:
             gmsv.setSetting("PITCH",float(options.pitch))
         except:
-            logging.error("Invalid value for PITCH; using default. {}".format(gmsv.getSetting("PITCH")))
+            gmsv.logger.error("Invalid value for PITCH; using default. {}".format(gmsv.getSetting("PITCH")))
 
     ''' Configure for testing from command line'''
     if options.latlongpair is not None:
@@ -113,7 +111,7 @@ def main():
             latlongstrlst = options.latlongpair.split(",")
             testpt = gpspt2dict([float(coord) for coord in latlongstrlst])
         except:
-            logging.error("Invalid value latitude, longitude list: %s ; using default. " % (options.latlongpair,defpt))
+            gmsv.logger.error("Invalid value latitude, longitude list: %s ; using default. " % (options.latlongpair,defpt))
             testpt = defpt
     else:
         testpt = defpt
@@ -131,31 +129,31 @@ def main():
     ''' The following code tests the different API options by running a test case '''
     ''' Select which tests to run '''
     if options.testlist is None:
-        logging.error("No tests specified; Exiting")
+        gmsv.logger.error("No tests specified; Exiting")
         sys.exit(1)
     testlist = options.testlist.split(",")            
     validtests = ['address','p2p','kml','directions','list','point']
     runtestlist = validtests if 'all' in testlist else [test for test in testlist if test in validtests]
-    logging.info("Running tests: {}".format(runtestlist))
+    gmsv.logger.info("Running tests: {}".format(runtestlist))
     
     ''' These exercise the main functions by running a canned test '''
     if 'list' in runtestlist:
         ''' List all of the valid tests to run '''
-        logging.info("Valid Tests are: {}".format(validtests))
+        gmsv.logger.info("Valid Tests are: {}".format(validtests))
 
     if 'p2p' in runtestlist:
         ''' Get the images for each point on a straight line path between two points '''
-        logging.info("Running test: {}".format('p2p'))
+        gmsv.logger.info("Running test: {}".format('p2p'))
         gmsv.runPt2Pt([workaddrpt,cicaddrpt],'CMUSPT', gmsv.getSetting("LINEPTS"))
         
     if 'address' in runtestlist:
         ''' Get the images for a single text street address '''
-        logging.info("Running test: {}".format('address'))
+        gmsv.logger.info("Running test: {}".format('address'))
         gmsv.runAddress(addrstr)
 
     if 'kml' in runtestlist:
         ''' Get the images from a kml file -- only works for lines now '''
-        logging.info("Running test: {}".format('kml'))        
+        gmsv.logger.info("Running test: {}".format('kml'))        
         gmsv.runKML("Floor2.kml","Walnut2")
         
     if 'point' in runtestlist:
@@ -165,37 +163,47 @@ def main():
 
     if 'directions' in runtestlist:
         ''' Get the images for each turn in the walking directions between two text street addresses '''
-        logging.info("Running test: {}".format('directions'))        
+        gmsv.logger.info("Running test: {}".format('directions'))        
         gmsv.runDirections(rtestr,"CMUDIR")
-    logging.info("Finished Tests")
+    gmsv.logger.info("Finished Tests")
 
 class GMapView(object):
-    def __init__(self, configfile = "./gmapconfig.json", **kwargs):
+    def __init__(self, GAPIKEY = None, configfile = "./gmapconfig.json", **kwargs):
+        self.logger = self.configureLogging()
         self.configfile = configfile
         self.settings = None
-        self.setDefaults()
+        self.setDefaults(GAPIKEY=GAPIKEY)
         self.addressfile = self.settings["ADDRESSFILE"] if "ADDRESSFILE" in self.settings else "./gmapaddresses.json"
 
         if 'GAPIKEY' in self.settings:
             self.GAPIKEY = self.settings['GAPIKEY']
             self.gmapsclient = googlemaps.Client(key=self.GAPIKEY)
         else:
-            logging.error("No GAPIKEY")
+            self.logger.error("No GAPIKEY")
             sys.exit(1)
         if os.path.isfile(self.addressfile):
             with open(self.addressfile) as jfile:
                 self.addressdict = json.load(jfile)
         else:
-            logging.info("%s does not exist" % self.addressfile)
+            self.logger.info("%s does not exist" % self.addressfile)
             self.addressdict = {'addresses':{}}
         self.testset = self.setTestData()
         pass
     
-    def setDefaults(self,current_settings = {}, **kwargs):
+    def setDefaults(self,current_settings = {}, GAPIKEY = None, **kwargs):
         if os.path.isfile(self.configfile):
             with open(self.configfile) as jfile:
                 self.settings = json.load(jfile)
-        self.settings['HEADINGS'] = self.settings['HEADINGS'].replace(",",";") # Hack to allow csv for headings
+        elif GAPIKEY is None:
+            self.logger.error("No gmapconfig.json and no APIKEY specified")
+            return False
+        else:
+            self.settings = defaultsettings
+            self.settings['GAPIKEY'] = GAPIKEY
+        self.settings['HEADINGS'] = self.settings['HEADINGS'].replace(",",";")  # Hack to allow csv for headings
+        if 'LOGLEVEL' in self.settings:
+            self.setLogLevel(self.settings['LOGLEVEL'])
+        return True
     
     def setSetting(self,key,value,**kwargs):
         self.settings[key] = value
@@ -237,15 +245,15 @@ class GMapView(object):
         ''' Start the pipeline with a single street address '''
         gc = self.gmapsclient.geocode(addr)
         locdict = gc[0]['geometry']['location']
-        logging.debug("Address \'{}\' is at {}".format(addr,locdict))
+        self.logger.debug("Address \'{}\' is at {}".format(addr,locdict))
         self.saveAddress(addr, locdict)
         self.saveResults(self.getResultsGEO(locdict,addr))
         return locdict
 
     def runPt(self,pt,rtname,**kwargs):
         ''' Start the pipeline with a single point '''
-        addr = "%s-latx%3.6flngx%3.6f" % (rtname,pt['lat'],pt['lng'])
-        result = self.getResultsGEO(pt,addr,**kwargs)
+#         addr = "%s-latx%3.6flngx%3.6f" % (rtname,pt['lat'],pt['lng'])
+        result = self.getResultsGEO(pt,rtname,**kwargs)
         self.saveResults(result,**kwargs)
         return result
     
@@ -278,7 +286,7 @@ class GMapView(object):
         ''' Start the pipeline with two street addresses and use the Google Maps walking directions
             to generate the turn points for photo gathering '''
         if 'start=' not in rtestr or 'end=' not in rtestr:
-            logging.error("Bad route string; Missing start or end: %s" % rtestr)
+            self.logger.error("Bad route string; Missing start or end: %s" % rtestr)
             return -1
         rtelst=rtestr.split(';')
         staddr = rtelst[0].split("=")[1] if 'start=' in rtelst[0] else rtelst[1].split("=")[1]
@@ -345,8 +353,8 @@ class GMapView(object):
         timestamp = humandate(time.time())[:-7]
         loc['results'].download_links(self.settings["IMGDIR"])
         numf = len(loc['results'].links)
-        GSVHEADER='GSV-' + ''.join(e for e in loc['rtname'] if e.isalnum()) + \
-                "_p" + str(self.settings['PITCH']) + "_" + timestamp + "_"
+        GSVHEADER='GSV_' + loc['rtname'] + \
+                "_p" + str(self.settings['PITCH']) + "_" + timestamp + "_"        
         headinglst = self.settings['HEADINGS'].split(";")
         imnamelst = []
         nfnlst = []
@@ -355,14 +363,14 @@ class GMapView(object):
             try:
                 fn = loc['results'].metadata[fct]['_file']
             except:
-                logging.error("Filename not found -- skip point")
+                self.logger.error("Filename not found -- skip point")
                 continue
             ffn = os.path.join(self.settings["IMGDIR"],fn)
             newfn = os.path.join(self.settings["IMGDIR"],GSVHEADER+fn).replace("gsv_","").replace("_p","_h%s_p" % headinglst[fct])
             nfnlst.append(newfn)
-            logging.debug("%s to %s" % (fn,newfn))
+            self.logger.debug("%s to %s" % (fn,newfn))
             if not os.path.isfile(ffn):
-                logging.error(ffn," does not exist")
+                self.logger.error(ffn," does not exist")
                 continue
             os.rename(ffn,newfn)
         
@@ -393,7 +401,7 @@ class GMapView(object):
             self.plotImages(imlst,xpos=self.settings['XPOS'],ypos=self.settings['YPOS'],title=title)
             
         if self.settings['CLEAN']:
-            logging.debug("Deleting downloaded files: {}".format(nfnlst))
+            self.logger.debug("Deleting downloaded files: {}".format(nfnlst))
             for fn in nfnlst:
                 if os.path.isfile(fn):
                     os.remove(fn)
@@ -410,7 +418,7 @@ class GMapView(object):
                 .format(url,center,zoom,size,apikey,sensor,mtype,center)
         for marker in marker_list:
             urlstr = "{0}&markers=color:{1}%7Clabel:{2}%7C{3}".format(urlstr,marker_color,marker_tag,marker)
-        logging.debug(urlstr)
+        self.logger.debug(urlstr)
         r = requests.get(urlstr)
         with open(output_file, 'wb') as f:
             f.write(r.content)
@@ -469,6 +477,40 @@ class GMapView(object):
     
     def getY(self,x,m,b):
         return x*m + b
+    
+    ''' Change the Log Level '''
+    def configureLogging(self):
+    #     self.logger.basicConfig(format="%(asctime)s [%(levelname)s] %(message)s")
+        self.logger = logging.getLogger(LOGNAME)
+        self.logger.propagate = False
+        fh = logging.FileHandler(LOGNAME+'.log')
+        fh.setLevel(logging.INFO)
+        ch = logging.StreamHandler(sys.stdout)
+        ch.setLevel(logging.INFO)
+        formatter = logging.Formatter("%(asctime)s [%(levelname)s] %(message)s")
+        fh.setFormatter(formatter)
+        ch.setFormatter(formatter)
+        self.logger.addHandler(fh)
+        self.logger.addHandler(ch)
+        self.logger.setLevel(logging.INFO)    
+        return self.logger
+    
+    def setLogLevel(self,level):
+        if level == "DEBUG":
+            newlevel = logging.DEBUG
+        elif level == "INFO":
+            newlevel = logging.INFO
+        elif level == "CRITICAL":
+            newlevel = logging.CRITICAL
+        elif level == "ERROR":
+            newlevel = logging.ERROR
+        elif level == "WARNING":
+            newlevel = logging.WARNING
+        else:
+            return
+        self.logger.setLevel(newlevel)
+        for handler in self.logger.handlers:
+            handler.setLevel(newlevel)
 
 ''' General Utility Functions '''
 def gpsdict2pt(dictpt):
@@ -484,6 +526,27 @@ def humandate(unixtime):
 def humandatenow():
     retstr = datetime.datetime.now().strftime('%Y-%m-%d-%H-%M-%S-%f')
     return retstr
+
+
+''' Dictionary with fallback defaults -- Note that API Key must be set '''
+defaultsettings = {
+    'IMGDIR': '/tmp/images', 
+    'IMGSIZE': '600x300', 
+    'PLOTON': False, 
+    'SHOWTIME': 4, 
+    'MAPON': True, 
+    'CLEAN': False, 
+    'HEADINGS': '0,90,180,270', 
+    'PITCH': 0, 
+    'LINEPTS': 4, 
+    'XPOS': 100, 
+    'YPOS': 100, 
+    'FIGWIDTH': 15, 
+    'FIGHEIGHT': 15,
+    'LOGLEVEL':"DEBUG",
+    'ADDRESSFILE': './gmapaddresses.json'
+}
+
 
 ''' Define some geographic locations for testing'''
 workaddr = '5000 Forbes Ave, Pittsburgh, PA 15213'
@@ -515,20 +578,5 @@ craigptlst = [[-79.94871048275425,40.44449150262002,274.0581036970866],
 pt1 = {'lat': 40.45066718053887, 'lng': -79.93559640239131}
 pt2 = {'lat': 40.45213252042862, 'lng': -79.93091008312071}
 
-def configureLogging():
-#     logging.basicConfig(format="%(asctime)s [%(levelname)s] %(message)s")
-    logger = logging.getLogger(LOGNAME)
-    logger.propagate = False
-    fh = logging.FileHandler(LOGNAME+'.log')
-    fh.setLevel(logging.INFO)
-    ch = logging.StreamHandler(sys.stdout)
-    ch.setLevel(logging.INFO)
-    formatter = logging.Formatter("%(asctime)s [%(levelname)s] %(message)s")
-    fh.setFormatter(formatter)
-    ch.setFormatter(formatter)
-    logger.addHandler(fh)
-    logger.addHandler(ch)
-    logger.setLevel(logging.INFO)    
-    return logger
 
 if __name__ == '__main__': main()
