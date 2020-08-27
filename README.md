@@ -49,6 +49,8 @@ Usage: python GMapView.py [options]
 
 Options:
   -h, --help            show this help message and exit
+  -G STRING, --gapikey=STRING
+                        Google Maps API Key  
   -d STRING, --headings=STRING
                         use STRING as headings  (comma separated list)
   -j FILE.json, --jsonconfig=FILE.json
@@ -90,8 +92,10 @@ The configuration parameters for the json file are:
 	"YPOS":100,			# The Y screen position for plots
 	"FIGWIDTH":15,			# Width of the plot
 	"FIGHEIGHT":15,			# Height of the plot
+	"LOGLEVEL":"INFO",		# Level of detail of logging. ["DEBUG","INFO","ERROR","CRITICAL","WARNING"]
 	"ADDRESSFILE":"./gmapaddresses.json"	# The file to use as a cache for searched addresses.
 }
 ```
 
-When using the API, any of these parameters can be overridden at runtime using the setSetting(key,value) method.
+When using the API, any of these parameters can be overridden at runtime using the setSetting(key,value) method. if the config file does not exist, then a set of defaults will be applied. However GAPIKEY must be specified -- this can be done via command line or API. 
+
